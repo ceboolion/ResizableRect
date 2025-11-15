@@ -8,5 +8,5 @@
 import SwiftUI
 
 extension Color {
-    static let customGreen = Color("customGreen", bundle: .module)
+    public static let customGreen = Color("customGreen", bundle: .module)
 }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 extension UIScreen {
-    static var width: CGFloat {
+    public static var width: CGFloat {
         UIWindow.currentWindow?.bounds.width ?? UIScreen.main.bounds.width
     }
 }

@@ -44,14 +44,34 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     
     // MARK: - PUBLIC PROPERTIES
     
-    public var rectViewWidth: CGFloat = UIScreen.width
-    public var gripColor: Color = Color.customGreen
-    public var gripLineWidth: CGFloat = 1.5
-    public var gripWidth: CGFloat = 60
-    public var gripHeight: CGFloat = 8
-    public var dashSize: [CGFloat] = [20, 5]
-    public var dashColor: Color = .black
+    public var rectViewWidth: CGFloat
+    public var gripColor: Color
+    public var gripLineWidth: CGFloat
+    public var gripWidth: CGFloat
+    public var gripHeight: CGFloat
+    public var dashSize: [CGFloat]
+    public var dashColor: Color
 
+    // MARK: - INITIALIZERS
+    
+    public init(
+        rectViewWidth: CGFloat = UIScreen.width,
+        gripColor: Color = Color.customGreen,
+        gripLineWidth: CGFloat = 1.5,
+        gripWidth: CGFloat = 60,
+        gripHeight: CGFloat = 8,
+        dashSize: [CGFloat] = [20, 5],
+        dashColor: Color = .black
+    ) {
+        self.rectViewWidth = rectViewWidth
+        self.gripColor = gripColor
+        self.gripLineWidth = gripLineWidth
+        self.gripWidth = gripWidth
+        self.gripHeight = gripHeight
+        self.dashSize = dashSize
+        self.dashColor = dashColor
+    }
+    
     // MARK: - VIEW BODY
 
     public var body: some View {
