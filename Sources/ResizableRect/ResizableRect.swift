@@ -9,7 +9,7 @@ import SwiftUI
 /// A protocol that defines the configurable properties of a resizable rectangle view.
 ///
 /// Conforming types are expected to provide customization for the rectangle's grips, borders, and dash styles.
-protocol ResizableRectViewProtocol: View {
+public protocol ResizableRectViewProtocol: View {
     
     /// The width of the rectangle view. Typically used to constrain the maximum width of the resizable area.
     var rectViewWidth: CGFloat { get set }
@@ -35,7 +35,7 @@ protocol ResizableRectViewProtocol: View {
     var dashColor: Color { get set }
 }
 
-struct ResizableRectView: ResizableRectViewProtocol {
+public struct ResizableRectView: ResizableRectViewProtocol {
     
     // MARK: - PRIVATE PROPERTIES
     
@@ -44,17 +44,17 @@ struct ResizableRectView: ResizableRectViewProtocol {
     
     // MARK: - PUBLIC PROPERTIES
     
-    var rectViewWidth: CGFloat = UIScreen.width
-    var gripColor: Color = Color.customGreen
-    var gripLineWidth: CGFloat = 1.5
-    var gripWidth: CGFloat = 60
-    var gripHeight: CGFloat = 8
-    var dashSize: [CGFloat] = [20, 5]
-    var dashColor: Color = .black
+    public var rectViewWidth: CGFloat = UIScreen.width
+    public var gripColor: Color = Color.customGreen
+    public var gripLineWidth: CGFloat = 1.5
+    public var gripWidth: CGFloat = 60
+    public var gripHeight: CGFloat = 8
+    public var dashSize: [CGFloat] = [20, 5]
+    public var dashColor: Color = .black
 
     // MARK: - VIEW BODY
 
-    var body: some View {
+    public var body: some View {
         ZStack {
             Rectangle()
                 .fill(.clear)
