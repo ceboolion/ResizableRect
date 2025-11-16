@@ -16,8 +16,13 @@ enum GripPosition {
 
 struct RectangleGripItemView: View {
     
+    @State private var shouldResize: Bool = true
+    
+    // MARK: - PUBLIC PROPERTIES
+
     @Binding var rect: CGRect
     @Binding var initialRect: CGRect
+    var initialSize: CGSize
     var gripPosition: GripPosition
     var gripColor: Color
     var gripWidth: CGFloat
@@ -34,17 +39,23 @@ struct RectangleGripItemView: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
-                        let newPosition = setNewMaxY(value)
-                        let newSize = setNewHeight(newPosition)
-
-                        if newSize > gripWidth + 20 {
-                            setRect(newPosition, newSize)
+                        let newPosition = getNewPosition(value)
+                        let newSize = getNewSize(newPosition)
+                        
+                        if shouldResize(newPosition, newSize) {
+                        print("WRC newPosition: \(newPosition), newSize: \(newSize)")
+//                        if newPosition >= 0 && newSize >= gripWidth {
+                            updateRect(newPosition, newSize)
                         }
                     }
-                    .onEnded { _ in initialRect = rect }
+                    .onEnded { _ in
+                        initialRect = rect
+                    }
             )
     }
-    
+
+    // MARK: - PRIVATE METHODS
+
     private func setFrameWidth() -> CGFloat {
         switch gripPosition {
         case .top, .bottom: gripWidth
@@ -75,7 +86,7 @@ struct RectangleGripItemView: View {
         }
     }
     
-    private func setNewMaxY(_ value: DragGesture.Value) -> CGFloat {
+    private func getNewPosition(_ value: DragGesture.Value) -> CGFloat {
         switch gripPosition {
         case .top: initialRect.minY + value.translation.height
         case .bottom: initialRect.maxY + value.translation.height
@@ -84,7 +95,7 @@ struct RectangleGripItemView: View {
         }
     }
     
-    private func setNewHeight(_ value: CGFloat) -> CGFloat {
+    private func getNewSize(_ value: CGFloat) -> CGFloat {
         switch gripPosition {
         case .top: initialRect.maxY - value
         case .bottom: value - initialRect.minY
@@ -93,7 +104,7 @@ struct RectangleGripItemView: View {
         }
     }
     
-    private func setRect(_ newPosition: CGFloat? = nil, _ newSize: CGFloat? = nil) {
+    private func updateRect(_ newPosition: CGFloat? = nil, _ newSize: CGFloat? = nil) {
         switch gripPosition {
         case .top:
             guard let newPosition, let newSize else { return }
@@ -111,13 +122,38 @@ struct RectangleGripItemView: View {
             rect.size.width = newSize
         }
     }
+    
+    private func shouldResize(_ newPosition: CGFloat, _ newSize: CGFloat) -> Bool {
+        let space: CGFloat = gripWidth + 30
+        switch gripPosition {
+        case .top: return (newPosition >= 8 && newSize > space && newSize < initialSize.height)
+        case .bottom: return (newPosition >= 8 && newPosition < initialSize.height && newSize > space && newSize < initialSize.height)
+        case .left: return (newPosition >= 8 && newPosition <= initialSize.width && newSize >= space)
+        case .right: return (newPosition <= initialSize.width - 8 && newSize >= space)
+        }
+    }
 }
 
 // MARK: - PREVIEW
+#Preview("All grips") {
+    ResizableRectView(
+        rectViewWidth: UIScreen.width,
+        rectViewHeight: 400,
+        cornerRadius: 16,
+        gripColor: Color.customGreen,
+        gripLineWidth: 1.5,
+        gripWidth: 60,
+        gripHeight: 12,
+        dashSize: [20, 5],
+        dashColor: .white
+    )
+}
+
 #Preview("Top Grip") {
     RectangleGripItemView(
         rect: .constant(CGRect(x: 100, y: 200, width: 200, height: 200)),
         initialRect: .constant(.zero),
+        initialSize: CGSize(width: 200, height: 200),
         gripPosition: .top,
         gripColor: Color.customGreen,
         gripWidth: 60,
@@ -129,6 +165,7 @@ struct RectangleGripItemView: View {
     RectangleGripItemView(
         rect: .constant(CGRect(x: 100, y: 200, width: 200, height: 200)),
         initialRect: .constant(.zero),
+        initialSize: CGSize(width: 200, height: 200),
         gripPosition: .left,
         gripColor: Color.customGreen,
         gripWidth: 60,
@@ -140,6 +177,7 @@ struct RectangleGripItemView: View {
     RectangleGripItemView(
         rect: .constant(CGRect(x: 100, y: 200, width: 200, height: 200)),
         initialRect: .constant(.zero),
+        initialSize: CGSize(width: 200, height: 200),
         gripPosition: .bottom,
         gripColor: Color.customGreen,
         gripWidth: 60,
@@ -151,6 +189,7 @@ struct RectangleGripItemView: View {
     RectangleGripItemView(
         rect: .constant(CGRect(x: 100, y: 200, width: 200, height: 200)),
         initialRect: .constant(.zero),
+        initialSize: CGSize(width: 200, height: 200),
         gripPosition: .right,
         gripColor: Color.customGreen,
         gripWidth: 60,

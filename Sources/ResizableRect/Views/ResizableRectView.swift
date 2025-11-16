@@ -8,32 +8,37 @@ import SwiftUI
 
 /// A protocol that defines the configurable properties of a resizable rectangle view.
 ///
-/// Conforming types are expected to provide customization for the rectangle's grips, borders, and dash styles.
+/// Conforming types can customize the rectangle's size, grips, corner radius,
+/// and dashed border appearance.
 public protocol ResizableRectViewProtocol: View {
     
-    /// The width of the rectangle view. Typically used to constrain the maximum width of the resizable area.
+    /// The width of the rectangle view. Used to define the available horizontal space.
     var rectViewWidth: CGFloat { get set }
     
+    /// The height of the rectangle view. Used to define the available vertical space.
     var rectViewHeight: CGFloat { get set }
+    
+    /// The corner radius of the rectangle. If `nil`, the rectangle has sharp corners.
+    var cornerRadius: CGFloat? { get set }
     
     /// The color of the grips used to resize the rectangle.
     var gripColor: Color { get set }
     
-    /// The line width of the grips and the rectangle's dashed border.
+    /// The line width used for grips and the dashed border.
     var gripLineWidth: CGFloat { get set }
     
-    /// The width of the grips that appear on the top and bottom sides of the rectangle.
+    /// The width of the grips on the top and bottom edges.
     var gripWidth: CGFloat { get set }
     
-    /// The height of the grips that appear on the left and right sides of the rectangle.
+    /// The height of the grips on the left and right edges.
     var gripHeight: CGFloat { get set }
     
-    /// The dash pattern for the rectangle's border.
+    /// The dash pattern of the rectangle's border.
     ///
-    /// Example: `[20, 5]` will create a pattern of 20 points filled and 5 points empty.
+    /// Example: `[20, 5]` produces a pattern of 20 points drawn and 5 points skipped.
     var dashSize: [CGFloat] { get set }
     
-    /// The color of the dashed border.
+    /// The color of the dashed border. If `nil`, the border may be hidden.
     var dashColor: Color? { get set }
 }
 
@@ -49,6 +54,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     
     public var rectViewWidth: CGFloat
     public var rectViewHeight: CGFloat
+    public var cornerRadius: CGFloat?
     public var gripColor: Color
     public var gripLineWidth: CGFloat
     public var gripWidth: CGFloat
@@ -61,6 +67,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     public init(
         rectViewWidth: CGFloat = UIScreen.width,
         rectViewHeight: CGFloat = 200,
+        cornerRadius: CGFloat? = nil,
         gripColor: Color = Color.customGreen,
         gripLineWidth: CGFloat = 1.5,
         gripWidth: CGFloat = 60,
@@ -70,6 +77,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     ) {
         self.rectViewWidth = rectViewWidth
         self.rectViewHeight = rectViewHeight
+        self.cornerRadius = cornerRadius
         self.gripColor = gripColor
         self.gripLineWidth = gripLineWidth
         self.gripWidth = gripWidth
@@ -82,7 +90,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
 
     public var body: some View {
         ZStack {
-            Rectangle()
+            RoundedRectangle(cornerRadius: cornerRadius ?? 0)
                 .fill(.clear)
                 .stroke(setDashColor(), style: .init(lineWidth: gripLineWidth, dash: dashSize))
                 .frame(width: rect.width, height: rect.height)
@@ -91,6 +99,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
             RectangleGripsView(
                 rect: $rect,
                 initialRect: $initialRect,
+                initialSize: CGSize(width: rectViewWidth, height: rectViewHeight),
                 gripColor: gripColor,
                 gripWidth: gripWidth,
                 gripHeight: gripHeight
@@ -98,94 +107,9 @@ public struct ResizableRectView: ResizableRectViewProtocol {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            rect = CGRect(x: 8, y: 8, width: rectViewWidth - 16, height: rectViewHeight)
+            rect = CGRect(x: 8, y: 8, width: rectViewWidth - 16, height: rectViewHeight - 16)
         }
     }
-    
-    // MARK: - CUSTOM VIEWS
-//    
-//    private var topGrip: some View {
-//        Rectangle()
-//            .fill(gripColor)
-//            .clipShape(Capsule())
-//            .frame(width: gripWidth, height: gripHeight)
-//            .position(x: rect.midX, y: rect.minY)
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        let newMinY = initialRect.minY + value.translation.height
-//                        let newHeight = initialRect.maxY - newMinY
-//
-//                        if newHeight > gripWidth + 20 {
-//                            rect.origin.y = newMinY
-//                            rect.size.height = newHeight
-//                        }
-//                    }
-//                    .onEnded { _ in initialRect = rect }
-//            )
-//            .onAppear { initialRect = rect }
-//    }
-//    
-//    private var bottomGrip: some View {
-//        Rectangle()
-//            .fill(gripColor)
-//            .clipShape(Capsule())
-//            .frame(width: gripWidth, height: gripHeight)
-//            .position(x: rect.midX, y: rect.maxY)
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        let newMaxY = initialRect.maxY + value.translation.height
-//                        let newHeight = newMaxY - initialRect.minY
-//
-//                        if newHeight > gripWidth + 20 {
-//                            rect.size.height = newHeight
-//                        }
-//                    }
-//                    .onEnded { _ in initialRect = rect }
-//            )
-//    }
-//    
-//    private var leftGrip: some View {
-//        Rectangle()
-//            .fill(gripColor)
-//            .clipShape(Capsule())
-//            .frame(width: gripHeight, height: gripWidth)
-//            .position(x: rect.minX, y: rect.midY)
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        let newMinX = initialRect.minX + value.translation.width
-//                        let newWidth = initialRect.maxX - newMinX
-//
-//                        if newWidth > gripWidth + 20 {
-//                            rect.origin.x = newMinX
-//                            rect.size.width = newWidth
-//                        }
-//                    }
-//                    .onEnded { _ in initialRect = rect }
-//            )
-//    }
-//    
-//    private var rightGrip: some View {
-//        Rectangle()
-//            .fill(gripColor)
-//            .clipShape(Capsule())
-//            .frame(width: gripHeight, height: gripWidth)
-//            .position(x: rect.maxX, y: rect.midY)
-//            .gesture(
-//                DragGesture()
-//                    .onChanged { value in
-//                        let newMaxX = initialRect.maxX + value.translation.width
-//                        let newWidth = newMaxX - initialRect.minX
-//
-//                        if newWidth > gripWidth + 20 {
-//                            rect.size.width = newWidth
-//                        }
-//                    }
-//                    .onEnded { _ in initialRect = rect }
-//            )
-//    }
 
     // MARK: - PRIVATE METHODS
 
@@ -197,6 +121,6 @@ public struct ResizableRectView: ResizableRectViewProtocol {
 // MARK: - PREVIEW
 
 #Preview {
-    ResizableRectView(rectViewWidth: UIScreen.width, rectViewHeight: 200)
+    ResizableRectView(rectViewWidth: UIScreen.width, rectViewHeight: 600, cornerRadius: 16)
 }
 

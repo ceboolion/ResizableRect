@@ -13,6 +13,7 @@ struct RectangleGripsView: View {
 
     @Binding var rect: CGRect
     @Binding var initialRect: CGRect
+    var initialSize: CGSize
     var gripColor: Color
     var gripWidth: CGFloat
     var gripHeight: CGFloat
@@ -21,10 +22,44 @@ struct RectangleGripsView: View {
 
     var body: some View {
         Group {
-            RectangleGripItemView(rect: $rect, initialRect: $initialRect, gripPosition: .top, gripColor: gripColor, gripWidth: gripWidth, gripHeight: gripHeight)
-            RectangleGripItemView(rect: $rect, initialRect: $initialRect, gripPosition: .left, gripColor: gripColor, gripWidth: gripWidth, gripHeight: gripHeight)
-            RectangleGripItemView(rect: $rect, initialRect: $initialRect, gripPosition: .bottom, gripColor: gripColor, gripWidth: gripWidth, gripHeight: gripHeight)
-            RectangleGripItemView(rect: $rect, initialRect: $initialRect, gripPosition: .right, gripColor: gripColor, gripWidth: gripWidth, gripHeight: gripHeight)
+            RectangleGripItemView(
+                rect: $rect,
+                initialRect: $initialRect,
+                initialSize: initialSize,
+                gripPosition: .top,
+                gripColor: gripColor,
+                gripWidth: gripWidth,
+                gripHeight: gripHeight
+            )
+            
+            
+            RectangleGripItemView(
+                rect: $rect,
+                initialRect: $initialRect,
+                initialSize: initialSize,
+                gripPosition: .left,
+                gripColor: gripColor,
+                gripWidth: gripWidth,
+                gripHeight: gripHeight
+            )
+            RectangleGripItemView(
+                rect: $rect,
+                initialRect: $initialRect,
+                initialSize: initialSize,
+                gripPosition: .bottom,
+                gripColor: gripColor,
+                gripWidth: gripWidth,
+                gripHeight: gripHeight
+            )
+            RectangleGripItemView(
+                rect: $rect,
+                initialRect: $initialRect,
+                initialSize: initialSize,
+                gripPosition: .right,
+                gripColor: gripColor,
+                gripWidth: gripWidth,
+                gripHeight: gripHeight
+            )
         }
     }
 }
