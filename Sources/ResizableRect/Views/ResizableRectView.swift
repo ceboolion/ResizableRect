@@ -14,6 +14,8 @@ public protocol ResizableRectViewProtocol: View {
     /// The width of the rectangle view. Typically used to constrain the maximum width of the resizable area.
     var rectViewWidth: CGFloat { get set }
     
+    var rectViewHeight: CGFloat { get set }
+    
     /// The color of the grips used to resize the rectangle.
     var gripColor: Color { get set }
     
@@ -46,6 +48,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     // MARK: - PUBLIC PROPERTIES
     
     public var rectViewWidth: CGFloat
+    public var rectViewHeight: CGFloat
     public var gripColor: Color
     public var gripLineWidth: CGFloat
     public var gripWidth: CGFloat
@@ -57,6 +60,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
     
     public init(
         rectViewWidth: CGFloat = UIScreen.width,
+        rectViewHeight: CGFloat = 200,
         gripColor: Color = Color.customGreen,
         gripLineWidth: CGFloat = 1.5,
         gripWidth: CGFloat = 60,
@@ -65,6 +69,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
         dashColor: Color? = nil
     ) {
         self.rectViewWidth = rectViewWidth
+        self.rectViewHeight = rectViewHeight
         self.gripColor = gripColor
         self.gripLineWidth = gripLineWidth
         self.gripWidth = gripWidth
@@ -93,7 +98,7 @@ public struct ResizableRectView: ResizableRectViewProtocol {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear {
-            rect = CGRect(x: 8, y: 100, width: rectViewWidth - 16, height: 100)
+            rect = CGRect(x: 8, y: 8, width: rectViewWidth - 16, height: rectViewHeight)
         }
     }
     
@@ -192,6 +197,6 @@ public struct ResizableRectView: ResizableRectViewProtocol {
 // MARK: - PREVIEW
 
 #Preview {
-    ResizableRectView()
+    ResizableRectView(rectViewWidth: UIScreen.width, rectViewHeight: 200)
 }
 
