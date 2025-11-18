@@ -14,6 +14,8 @@ struct RectangleGripsView: View {
     @Binding var rect: CGRect
     @Binding var initialRect: CGRect
     var initialSize: CGSize
+    var horizontalPadding: CGFloat
+    var verticalPadding: CGFloat
     var gripColor: Color
     var gripWidth: CGFloat
     var gripHeight: CGFloat
@@ -25,7 +27,8 @@ struct RectangleGripsView: View {
             RectangleGripItemView(
                 rect: $rect,
                 initialRect: $initialRect,
-                initialSize: initialSize,
+                horizontalPadding: horizontalPadding,
+                verticalPadding: verticalPadding,
                 gripPosition: .top,
                 gripColor: gripColor,
                 gripWidth: gripWidth,
@@ -36,7 +39,8 @@ struct RectangleGripsView: View {
             RectangleGripItemView(
                 rect: $rect,
                 initialRect: $initialRect,
-                initialSize: initialSize,
+                horizontalPadding: horizontalPadding,
+                verticalPadding: verticalPadding,
                 gripPosition: .left,
                 gripColor: gripColor,
                 gripWidth: gripWidth,
@@ -45,7 +49,8 @@ struct RectangleGripsView: View {
             RectangleGripItemView(
                 rect: $rect,
                 initialRect: $initialRect,
-                initialSize: initialSize,
+                horizontalPadding: horizontalPadding,
+                verticalPadding: verticalPadding,
                 gripPosition: .bottom,
                 gripColor: gripColor,
                 gripWidth: gripWidth,
@@ -54,7 +59,8 @@ struct RectangleGripsView: View {
             RectangleGripItemView(
                 rect: $rect,
                 initialRect: $initialRect,
-                initialSize: initialSize,
+                horizontalPadding: horizontalPadding,
+                verticalPadding: verticalPadding,
                 gripPosition: .right,
                 gripColor: gripColor,
                 gripWidth: gripWidth,
